@@ -15,13 +15,13 @@
                       </div>
                   </div>
                   <div id="answer-wrapper">
-                      <div class="answer bg-red"> <div class = "answer-content"><img class = "item1" :src="items[index].item1.src">{{items[index].item1.content}}</div></div>
-                      <div class="answer bg-blue"><div class = "answer-content"><img class = "item2" :src="items[index].item2.src">{{items[index].item2.content}}</div></div>
+                      <div class="answer bg-red"> <div class = "answer-content"><img class = "item1" :src="items[index].item1.src" @click = "imageClick(index, 1)">{{items[index].item1.content}}</div></div>
+                      <div class="answer bg-blue"><div class = "answer-content"><img class = "item2" :src="items[index].item2.src" @click = "imageClick(index, 2)">{{items[index].item2.content}}</div></div>
                   </div>
               </div>
               <div id = "">
-                <button type="button" class="button" @click = "moveToPrev">Click me!</button>
-                <button type="button" class="button" @click = "moveToNext">Click me!</button>
+                <button type="button" class="button" :disabled="index === 0" @click = "moveToPrev">이전</button>
+                <button type="button" class="button" :disabled="!buttonEnabled" @click = "moveToNext">다음</button>
               </div>
           </div>
       </div>
@@ -48,6 +48,8 @@ export default {
         }
         ], 
       index : 0, 
+      selectedItem : '', 
+      buttonEnabled : false
     }
   },
   created(){
@@ -57,20 +59,29 @@ export default {
       init(){
         this.index = 0; 
       },
-      movetoNext(){
+      moveToNext(){
+        this.$store.commit("addItem", this.selectedItem);
         if (this.index == this.items.length -1) {
+          this.$router.push({name : 'balance-game-end'})
           return; 
         }
         this.index ++; 
+        this.buttonEnabled = false; 
       },
       moveToPrev(){
-        if(this.index > 0){
-            this.index --;
-
+        if(this.index === 0){
+          return; 
         }
-        else return ; 
-        
+        this.$store.commit("removeItem", this.selectedItem); 
+        this.index --;
+        this.selectedItem = ''
+        this.buttonEnabled = false; 
+      }, 
+      imageClick(index, i){
+        this.selectedItem = i === 1 ? this.items[index].item1.content : this.items[index].item2.content;
+        this.buttonEnabled = true;
       }
+
   }
 }
 </script>
@@ -188,14 +199,19 @@ header > #header-wrapper > #menu-wrapper > *:not(last-child) {
 }
 .button {
   background-color : rgba(255, 240, 245, 1);
-  color:#fff; 
+  color:black; 
   border:none;
   border-radius:10px;
   padding:15px;
   min-height:30px; 
   min-width: 120px; 
   margin-right: 10px; 
+  font-family: 'jua';
 }
-
+.button:disabled {
+  background-color: rgba(255, 240, 245, 0.5); /* 예시로 회색 투명 배경을 지정 */
+  color: gray; /* 텍스트 색상 변경 */
+  cursor: not-allowed; /* 비활성화된 상태에서는 마우스 커서를 보통 커서 대신 not-allowed로 변경 */
+}
 
 </style>
