@@ -8,51 +8,56 @@
               </div>
           </header>
           <div id="content">
-              <div id="content-wrapper">
-                  <div id="question-wrapper">
-                      <div id="question">
-                        {{data}}
-                      </div>
-                  </div>
-                  <div id="answer-wrapper">
-                    <div class = "answer-content"><img class = "item2" :src="items[index].item2.src">{{items[index].item2.content}}</div>
-                  </div>
-              </div>
+              <div class="progressbar-container">
+                <progress-component v-for = "(item, index) in items" :key="index" :value = "item.value">
+                    <div class = "progress-value">
+                        <span class = "category">{{item.key}}</span>
+                    </div>
+                </progress-component>
+               </div>
           </div>
       </div>
 </template>
 
 <script>
+import ProgressComponent from './ProgressComponent.vue';
 
 export default {
+  components: { ProgressComponent },
   name: 'FinalPage',
   data(){
     return {
-      items : [
+        items: [
         {
-          item1 : {content : "hello1", src : require('@/assets/logo.png')},
-          item2 : {content : "hello4", src : require('@/assets/logo.png')}
+          key: 'HTML/CSS',
+          value: 50,
         },
         {
-          item1 : {content : "hello2", src : require('@/assets/logo.png')},
-          item2 : {content : "hello5", src : require('@/assets/logo.png')}
-        }, 
+          key: 'JS',
+          value: 75
+        },
         {
-          item1 : {content : "hello3", src : require('@/assets/logo.png')},
-          item2 : {content : "hello6", src : require('@/assets/logo.png')}
+          key: 'JAVA',
+          value: 100
+        },
+        {
+          key: 'PHP',
+          value: 90
         }
-        ], 
+      ], 
       index : 0, 
-      data : ''
+
+    }
+  },
+  computed:{
+    getSelectedItems(){
+        return this.$store.getters.getSelectedItems; 
     }
   },
   created(){
     this.setup(); 
   },
   methods: {
-    setup(){
-        this.data = this.$store.state.name
-    }
   }
 }
 </script>
@@ -152,6 +157,10 @@ header > #header-wrapper > #menu-wrapper > *:not(last-child) {
   margin : 0 auto; 
 }
 
-
-
+.progressbar-container {
+  width: 500px;
+  padding: 1rem;
+  border-radius: 5px;
+  background-color: #fff;
+}
 </style>
