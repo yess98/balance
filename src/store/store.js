@@ -5,7 +5,20 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state : {
-        name : 2
+        selectedItems : []
+    },
+    mutations: {
+        addItem(state, payload){
+            state.selectedItems.push(payload); 
+        }, 
+        removeItem(state){
+            state.selectedItems.pop();
+        }
+    },
+    getters : {
+        getSelectedItems(state){
+            return state.selectedItems;
+        }
     }
 })
 export default store; 
